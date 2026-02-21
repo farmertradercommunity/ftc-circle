@@ -9,24 +9,25 @@ import {
   ResponsiveContainer,
 } from "recharts"
 
-interface EquityData {
-  day: string
-  equity: number
-}
+export default function EquityChart({ data }: { data: any[] }) {
+  const chartData = data.map((item) => ({
+    date: new Date(item.created_at).toLocaleTimeString(),
+    equity: Number(item.equity),
+  }))
 
-export default function EquityChart({ data }: { data: EquityData[] }) {
   return (
-    <div className="h-60">
-      <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={data}>
-          <XAxis dataKey="day" stroke="#888888" />
-          <YAxis stroke="#888888" />
+    <div style={{ width: "100%", height: 300 }}>
+      <ResponsiveContainer>
+        <LineChart data={chartData}>
+          <XAxis dataKey="date" />
+          <YAxis />
           <Tooltip />
           <Line
             type="monotone"
             dataKey="equity"
-            stroke="#22c55e"
+            stroke="#4ade80"
             strokeWidth={2}
+            dot={false}
           />
         </LineChart>
       </ResponsiveContainer>
