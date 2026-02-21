@@ -1,5 +1,5 @@
 {
-  "cron": [
+  "crons": [
     {
       "path": "/api/myfxbook?secret=ftc123supersecret",
       "schedule": "*/5 * * * *"
