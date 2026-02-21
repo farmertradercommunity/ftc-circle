@@ -77,7 +77,7 @@ console.log("TOTAL ACCOUNTS:", accounts.length)
 
   console.log("SYNCING:", name, growth, drawdown)
 
-  await supabase
+  const { data, error } = await supabase
   .from("traders")
   .upsert(
     {
@@ -88,10 +88,11 @@ console.log("TOTAL ACCOUNTS:", accounts.length)
     },
     { onConflict: "id" }
   )
-  if (error) {
+
+if (error) {
   console.log("SUPABASE ERROR:", error)
 } else {
-  console.log("UPSERT SUCCESS:", account.name)
+  console.log("UPSERT SUCCESS:", data)
 }
 }
 
