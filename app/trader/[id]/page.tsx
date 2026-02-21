@@ -1,31 +1,77 @@
-<div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+import { supabase } from "@/lib/supabase"
+import EquityChart from "./EquityChart"
 
-  <div className="bg-gray-900 rounded-xl p-5 border border-gray-800">
-    <p className="text-gray-400 text-sm">Growth</p>
-    <p className="text-2xl font-bold text-green-400">
-      {trader.growth}%
-    </p>
-  </div>
+export default async function TraderDetail({
+  params,
+}: {
+  params: { id: string }
+}) {
+  const { id } = params
 
-  <div className="bg-gray-900 rounded-xl p-5 border border-gray-800">
-    <p className="text-gray-400 text-sm">Drawdown</p>
-    <p className="text-2xl font-bold text-red-400">
-      {trader.drawdown}%
-    </p>
-  </div>
+  const { data: trader } = await supabase
+    .from("traders")
+    .select("*")
+    .eq("id", id)
+    .single()
 
-  <div className="bg-gray-900 rounded-xl p-5 border border-gray-800">
-    <p className="text-gray-400 text-sm">Equity</p>
-    <p className="text-2xl font-bold text-blue-400">
-      ${Number(trader.equity).toLocaleString()}
-    </p>
-  </div>
+  const { data: history } = await supabase
+    .from("equity_history")
+    .select("*")
+    .eq("trader_id", id)
+    .order("created_at", { ascending: true })
 
-  <div className="bg-gray-900 rounded-xl p-5 border border-gray-800">
-    <p className="text-gray-400 text-sm">Balance</p>
-    <p className="text-2xl font-bold text-yellow-400">
-      ${Number(trader.balance).toLocaleString()}
-    </p>
-  </div>
+  if (!trader) {
+    return <div className="text-white p-10">Trader not found</div>
+  }
 
-</div>
+  return (
+    <main className="min-h-screen p-10">
+
+      {/* METRIC GRID DI SINI */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-5 mb-10">
+
+        <div className="bg-gradient-to-br from-gray-900 to-gray-950 rounded-2xl p-6 border border-gray-800 hover:scale-[1.02] transition duration-300">
+          <p className="text-gray-500 text-xs uppercase tracking-wider mb-2">
+            Growth
+          </p>
+          <p className={`text-3xl font-bold ${
+            trader.growth >= 0 ? "text-green-400" : "text-red-400"
+          }`}>
+            {trader.growth}%
+          </p>
+        </div>
+
+        <div className="bg-gradient-to-br from-gray-900 to-gray-950 rounded-2xl p-6 border border-gray-800 hover:scale-[1.02] transition duration-300">
+          <p className="text-gray-500 text-xs uppercase tracking-wider mb-2">
+            Drawdown
+          </p>
+          <p className="text-3xl font-bold text-red-400">
+            {trader.drawdown}%
+          </p>
+        </div>
+
+        <div className="bg-gradient-to-br from-gray-900 to-gray-950 rounded-2xl p-6 border border-gray-800 hover:scale-[1.02] transition duration-300">
+          <p className="text-gray-500 text-xs uppercase tracking-wider mb-2">
+            Equity
+          </p>
+          <p className="text-3xl font-bold text-blue-400">
+            ${Number(trader.equity).toLocaleString()}
+          </p>
+        </div>
+
+        <div className="bg-gradient-to-br from-gray-900 to-gray-950 rounded-2xl p-6 border border-gray-800 hover:scale-[1.02] transition duration-300">
+          <p className="text-gray-500 text-xs uppercase tracking-wider mb-2">
+            Balance
+          </p>
+          <p className="text-3xl font-bold text-yellow-400">
+            ${Number(trader.balance).toLocaleString()}
+          </p>
+        </div>
+
+      </div>
+
+      <EquityChart data={history || []} />
+
+    </main>
+  )
+}
