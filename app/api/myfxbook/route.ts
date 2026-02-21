@@ -62,9 +62,15 @@ console.log("SYNC STARTED")
 console.log("ACCOUNTS RESPONSE:", accountsData)
 
   const accounts = accountsData.accounts || []
+  //NGASIH LOG AKUNTS RAW DAN TOTALNYA
 console.log("ACCOUNTS RAW:", accounts)
+    // NGASIH LOG JUMLAH AKUNTS
+console.log("TOTAL ACCOUNTS:", accounts.length)
+
   // LOOP UPDATE DATABASE
   for (const account of accounts) {
+    //NGASIH TAU PROSES AKUNTS APA
+    console.log("PROCESSING ACCOUNT:", account.name)
   const name = account.name
   const growth = account.gain
   const drawdown = account.drawdown
@@ -82,6 +88,11 @@ console.log("ACCOUNTS RAW:", accounts)
     },
     { onConflict: "id" }
   )
+  if (error) {
+  console.log("SUPABASE ERROR:", error)
+} else {
+  console.log("UPSERT SUCCESS:", account.name)
+}
 }
 
   // LOGOUT
