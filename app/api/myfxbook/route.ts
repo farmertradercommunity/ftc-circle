@@ -58,34 +58,27 @@ console.log("SYNC STARTED")
 console.log("ACCOUNTS RESPONSE:", accountsData)
 
   const accounts = accountsData.accounts || []
-
+console.log("ACCOUNTS RAW:", accounts)
   // LOOP UPDATE DATABASE
   for (const account of accounts) {
-    const name = account.name
+  const name = account.name
+  const growth = account.gain
+  const drawdown = account.drawdown
 
-    const growth = account.gain
-    const drawdown = account.drawdown
-    const equity = account.equity
-    const balance = account.balance
+  console.log("SYNCING:", name, growth, drawdown)
 
-    // Update traders table
-    await supabase
-      .from("traders")
-      .update({
+  await supabase
+    .from("traders")
+    .upsert(
+      {
+        name,
         growth,
         drawdown,
-        equity,
-        balance,
-      })
-      .eq("name", name)
-
-    // Insert equity history
-    await supabase.from("equity_history").insert({
-      trader_id: name.toLowerCase().replace("ftc ", ""),
-      equity,
-      day: new Date().toISOString(),
-    })
-  }
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: "id" }
+    )
+}
 
   // LOGOUT
   await fetch(
