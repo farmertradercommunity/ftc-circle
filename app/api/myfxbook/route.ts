@@ -1,0 +1,81 @@
+import { supabase } from "@/lib/supabase"
+
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url)
+  const secret = searchParams.get("secret")
+
+  if (secret !== process.env.SYNC_SECRET) {
+    return Response.json({ error: "Unauthorized" }, { status: 401 })
+  }
+  const email = process.env.MYFXBOOK_EMAIL
+  const password = process.env.MYFXBOOK_PASSWORD
+
+  if (!email || !password) {
+    return Response.json({ error: "Missing credentials" })
+  }
+
+  // LOGIN
+  const loginRes = await fetch(
+  `https://www.myfxbook.com/api/login.json?email=${email}&password=${password}`,
+  {
+    headers: {
+      "User-Agent": "Mozilla/5.0",
+    },
+  }
+)
+  const loginData = await loginRes.json()
+
+  if (!loginData.session) {
+    return Response.json({ error: "Login failed", loginData })
+  }
+
+  const session = loginData.session
+
+  // GET ACCOUNTS
+  const accountsRes = await fetch(
+  `https://www.myfxbook.com/api/get-my-accounts.json?session=${session}`,
+  {
+    headers: {
+      "User-Agent": "Mozilla/5.0",
+    },
+  }
+)
+  const accountsData = await accountsRes.json()
+
+  const accounts = accountsData.accounts || []
+
+  // LOOP UPDATE DATABASE
+  for (const account of accounts) {
+    const name = account.name
+
+    const growth = account.gain
+    const drawdown = account.drawdown
+    const equity = account.equity
+    const balance = account.balance
+
+    // Update traders table
+    await supabase
+      .from("traders")
+      .update({
+        growth,
+        drawdown,
+        equity,
+        balance,
+      })
+      .eq("name", name)
+
+    // Insert equity history
+    await supabase.from("equity_history").insert({
+      trader_id: name.toLowerCase().replace("ftc ", ""),
+      equity,
+      day: new Date().toISOString(),
+    })
+  }
+
+  // LOGOUT
+  await fetch(
+    `https://www.myfxbook.com/api/logout.json?session=${session}`
+  )
+
+  return Response.json({ success: true, updated: accounts.length })
+}
