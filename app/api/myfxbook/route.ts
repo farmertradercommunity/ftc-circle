@@ -68,16 +68,16 @@ console.log("ACCOUNTS RAW:", accounts)
   console.log("SYNCING:", name, growth, drawdown)
 
   await supabase
-    .from("traders")
-    .upsert(
-      {
-        name,
-        growth,
-        drawdown,
-        updated_at: new Date().toISOString(),
-      },
-      { onConflict: "id" }
-    )
+  .from("traders")
+  .upsert(
+    {
+      id: account.name.toLowerCase().replace(/\s/g, "-"),
+      name: account.name,
+      growth: account.gain,
+      drawdown: account.drawdown,
+    },
+    { onConflict: "id" }
+  )
 }
 
   // LOGOUT
