@@ -1,11 +1,21 @@
 import { supabase } from "@/lib/supabase"
 
 export async function GET(request: Request) {
-  const authHeader = request.headers.get("authorization")
+  // ambil secret dari header
+const authHeader = request.headers.get("authorization")
 
-  if (authHeader !== `Bearer ${process.env.SYNC_SECRET}`) {
-    return Response.json({ error: "Unauthorized" }, { status: 401 })
-  }
+// ambil secret dari query param
+const { searchParams } = new URL(request.url)
+const querySecret = searchParams.get("secret")
+
+// validasi
+const valid =
+  authHeader === `Bearer ${process.env.SYNC_SECRET}` ||
+  querySecret === process.env.SYNC_SECRET
+
+if (!valid) {
+  return Response.json({ error: "Unauthorized" }, { status: 401 })
+}
   const email = process.env.MYFXBOOK_EMAIL
   const password = process.env.MYFXBOOK_PASSWORD
 
