@@ -77,17 +77,29 @@ console.log("TOTAL ACCOUNTS:", accounts.length)
 
   console.log("SYNCING:", name, growth, drawdown)
 
-  const { data, error } = await supabase
+  const traderId = account.name.toLowerCase().replace(/\s/g, "-")
+
+const { data, error } = await supabase
   .from("traders")
   .upsert(
     {
-      id: account.name.toLowerCase().replace(/\s/g, "-"),
+      id: traderId,
       name: account.name,
-      growth: account.gain,
-      drawdown: account.drawdown,
+      growth: Number(account.gain),
+      drawdown: Number(account.drawdown),
+      equity: Number(account.equity),
+      balance: Number(account.balance),
+      updated_at: new Date().toISOString()
     },
     { onConflict: "id" }
   )
+  await supabase
+  .from("equity_history")
+  .insert({
+    trader_id: traderId,
+    equity: Number(account.equity),
+    balance: Number(account.balance),
+  })
 
 if (error) {
   console.log("SUPABASE ERROR:", error)
