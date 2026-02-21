@@ -1,10 +1,9 @@
 import { supabase } from "@/lib/supabase"
 
 export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url)
-  const secret = searchParams.get("secret")
+  const authHeader = request.headers.get("authorization")
 
-  if (secret !== process.env.SYNC_SECRET) {
+  if (authHeader !== `Bearer ${process.env.SYNC_SECRET}`) {
     return Response.json({ error: "Unauthorized" }, { status: 401 })
   }
   const email = process.env.MYFXBOOK_EMAIL

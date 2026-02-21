@@ -1,7 +1,7 @@
 {
   "crons": [
     {
-      "path": "/api/myfxbook?secret=ftc123supersecret",
+      "path": "/api/myfxbook",
       "schedule": "*/5 * * * *"
     }
   ]
