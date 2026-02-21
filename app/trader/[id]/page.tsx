@@ -4,9 +4,9 @@ import EquityChart from "./EquityChart"
 export default async function TraderDetail({
   params,
 }: {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }) {
-  const id = params.id
+  const { id } = await params
 
   const { data: trader, error } = await supabase
     .from("traders")
