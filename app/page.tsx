@@ -1,17 +1,16 @@
 import { supabase } from "@/lib/supabase"
 import Link from "next/link"
-import { createClient } from "@supabase/supabase-js"
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-)
 export const dynamic = "force-dynamic"
 export default async function Home() {
-  const { data: traders } = await supabase
+  const { data: traders, error } = await supabase
     .from("traders")
     .select("*")
     .order("growth", { ascending: false })
+
+  if (error) {
+    console.error(error)
+    return <div>Error loading data</div>
+  }
 
   return (
     <main className="min-h-screen bg-black text-white p-10">
@@ -27,7 +26,7 @@ export default async function Home() {
           </tr>
         </thead>
         <tbody>
-  {traders?.map((trader, index) => {
+  {traders && traders.map((trader, index) => {
     const isFirst = index === 0
 
     return (
