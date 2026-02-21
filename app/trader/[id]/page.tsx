@@ -8,21 +8,19 @@ export default async function TraderDetail({
 }) {
   const id = params.id
 
-console.log("========== DEBUG START ==========")
-console.log("PARAM ID FROM URL:", id)
+  const { data: trader, error } = await supabase
+    .from("traders")
+    .select("*")
+    .eq("id", id)
+    .single()
 
-const { data, error } = await supabase
-  .from("traders")
-  .select("*")
-  .eq("id", id)
-
-console.log("SUPABASE ERROR:", error)
-console.log("SUPABASE DATA:", data)
-
-const trader = data?.[0]
-
-console.log("FINAL TRADER:", trader)
-console.log("========== DEBUG END ==========")
+  if (error || !trader) {
+    return (
+      <div className="min-h-screen bg-black text-white p-10">
+        Trader not found
+      </div>
+    )
+  }
 
   const { data: history } = await supabase
     .from("equity_history")
