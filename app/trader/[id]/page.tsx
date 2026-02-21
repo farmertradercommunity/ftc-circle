@@ -1,5 +1,6 @@
 import { supabase } from "@/lib/supabase"
 import EquityChart from "./EquityChart"
+import Link from "next/link"
 
 export default async function TraderDetail({
   params,
@@ -32,7 +33,14 @@ export default async function TraderDetail({
 
   return (
     <main className="min-h-screen p-10">
-
+<div className="mb-6">
+  <Link
+    href="/"
+    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-900 border border-gray-800 hover:bg-gray-800 transition text-sm"
+  >
+    ← Kembali ke Ranking
+  </Link>
+</div>
       {/* METRIC GRID DI SINI */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-5 mb-10">
 
