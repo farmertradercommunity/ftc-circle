@@ -6,7 +6,7 @@ export default async function TraderDetail({
 }: {
   params: { id: string }
 }) {
-  const { id } = params
+  const id = params.id
 
   const { data: trader } = await supabase
     .from("traders")
