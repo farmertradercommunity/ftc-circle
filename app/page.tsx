@@ -13,8 +13,8 @@ export default async function Home() {
   }
 
   return (
-  <main className="min-h-screen bg-gradient-to-b from-black via-gray-950 to-black text-white p-10">
-    <div className="max-w-5xl mx-auto">
+  <main className="min-h-screen bg-gradient-to-b from-black via-gray-950 to-black text-white px-4 py-6 sm:p-10">
+    <div className="max-w-6xl mx-auto">
 
       <h1 className="text-4xl font-bold tracking-tight mb-2">
         FTC Circle Ranking
@@ -24,7 +24,7 @@ export default async function Home() {
       </p>
 
       <div className="bg-gray-900 rounded-2xl border border-gray-800 overflow-hidden">
-
+        <div className="hidden md:block">
         <table className="w-full">
           <thead>
             <tr className="bg-gray-800 text-gray-400 text-sm">
@@ -78,7 +78,7 @@ export default async function Home() {
           </tbody>
 
         </table>
-
+      </div>
       </div>
 
     </div>

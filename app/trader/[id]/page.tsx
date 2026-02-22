@@ -32,7 +32,7 @@ export default async function TraderDetail({
   
 
   return (
-    <main className="min-h-screen p-10">
+    <main className="min-h-screen px-4 py-6 sm:p-10">
 <div className="mb-6">
   <Link
     href="/"
@@ -42,7 +42,7 @@ export default async function TraderDetail({
   </Link>
 </div>
       {/* METRIC GRID DI SINI */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-5 mb-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
 
         <div className="bg-gradient-to-br from-gray-900 to-gray-950 rounded-2xl p-6 border border-gray-800 hover:scale-[1.02] transition duration-300">
           <p className="text-gray-500 text-xs uppercase tracking-wider mb-2">
@@ -83,8 +83,10 @@ export default async function TraderDetail({
         </div>
 
       </div>
-
-      <EquityChart data={history || []} />
+          // CHART DI SINI
+      <div className="mt-6 bg-gray-900 rounded-2xl p-4 sm:p-6 border border-gray-800">
+  <EquityChart data={history || []} />
+      </div>
 
     </main>
     
