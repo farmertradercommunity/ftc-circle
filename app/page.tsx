@@ -24,7 +24,27 @@ export default async function Home() {
       </p>
 
       <div className="bg-gray-900 rounded-2xl border border-gray-800 overflow-hidden">
-        {/* <div className="hidden md:block"> */}
+        <div className="md:hidden space-y-4">
+  {traders && traders.map((trader, index) => (
+    <Link key={trader.id} href={`/trader/${trader.id}`}>
+      <div className="bg-gray-900 p-4 rounded-xl border border-gray-800">
+        <div className="flex justify-between items-center">
+          <span className="font-semibold">
+            #{index + 1} {trader.name}
+          </span>
+          <span className={`${trader.growth >= 0 ? "text-green-400" : "text-red-400"}`}>
+            {trader.growth}%
+          </span>
+        </div>
+
+        <div className="text-sm text-gray-400 mt-1">
+          Drawdown: {trader.drawdown}%
+        </div>
+      </div>
+    </Link>
+  ))}
+</div>
+        <div className="hidden md:block">
         <table className="w-full">
           <thead>
             <tr className="bg-gray-800 text-gray-400 text-sm">
@@ -79,7 +99,7 @@ export default async function Home() {
 
         </table>
       </div>
-      
+      </div>
 
     </div>
   </main>
