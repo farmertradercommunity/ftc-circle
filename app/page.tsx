@@ -24,7 +24,7 @@ export default async function Home() {
       </p>
 
       <div className="bg-gray-900 rounded-2xl border border-gray-800 overflow-hidden">
-        <div className="hidden md:block">
+        {/* <div className="hidden md:block"> */}
         <table className="w-full">
           <thead>
             <tr className="bg-gray-800 text-gray-400 text-sm">
@@ -79,7 +79,7 @@ export default async function Home() {
 
         </table>
       </div>
-      </div>
+      
 
     </div>
   </main>

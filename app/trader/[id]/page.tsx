@@ -83,7 +83,7 @@ export default async function TraderDetail({
         </div>
 
       </div>
-          // CHART DI SINI
+         
       <div className="mt-6 bg-gray-900 rounded-2xl p-4 sm:p-6 border border-gray-800">
   <EquityChart data={history || []} />
       </div>
